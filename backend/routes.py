@@ -11,18 +11,12 @@ def get_friends():
     result = [friend.to_json() for friend in friends]
     return jsonify(result)
 
-# @app.route("/api/friends/<int:id>", methods=["GET"])
-# def get_friend():
-#     friend = Friend.query.get(id)
-#     if friend is None:
-#         return jsonify({"error":"friend does not exits!"}),404
-#     return jsonify(friend.to_json()),200
-# @app.route("/api/friends/<int:id>", methods=["GET"], strict_slashes=False)
-# def get_friend(id):
-#     friend = Friend.query.get(id)
-#     if friend is None:
-#         return jsonify({"error": "Friend not found"}), 404
-#     return jsonify(friend.to_json()), 200
+@app.route("/api/friends/<int:id>", methods=["GET"])
+def get_friend_by_id(id):
+    friend = Friend.query.get(id)
+    if friend is None:
+        return jsonify({"error": "Friend not found"}), 404
+    return jsonify(friend.to_json()), 200
 
 #create a friend 
 @app.route("/api/friends", methods=["POST"])
@@ -72,7 +66,7 @@ def handle_friend(id):
     elif request.method == "PATCH":
         try:
         # get the specific from the request body
-            data = request.get_json(force=True)
+            data = request.json
             # get the name from request body, if no name has been past, use the original name of the friend
             friend.name = data.get("name", friend.name)
             friend.gender = data.get("gender",friend.gender)
